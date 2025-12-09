@@ -1,0 +1,150 @@
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Scanner;
+
+public class MusicPlaylistManager {
+
+    private static LinkedList<String> playlist = new LinkedList<>();
+    private static ListIterator<String> iterator;
+    private static boolean goingForward = true;
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        iterator = playlist.listIterator();
+        int choice;
+
+        while (true) {
+            System.out.println("\n===== 🎵 MUSIC PLAYLIST MANAGER 🎵 =====");
+            System.out.println("1. Add Song");
+            System.out.println("2. Remove Song");
+            System.out.println("3. Search Song");
+            System.out.println("4. Play Next Song");
+            System.out.println("5. Play Previous Song");
+            System.out.println("6. Display Playlist");
+            System.out.println("7. Clear Playlist");
+            System.out.println("8. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // Clear buffer
+
+            switch (choice) {
+                case 1:
+                    addSong(sc);
+                    break;
+
+                case 2:
+                    removeSong(sc);
+                    break;
+
+                case 3:
+                    searchSong(sc);
+                    break;
+
+                case 4:
+                    playNextSong();
+                    break;
+
+                case 5:
+                    playPreviousSong();
+                    break;
+
+                case 6:
+                    displayPlaylist();
+                    break;
+
+                case 7:
+                    clearPlaylist();
+                    break;
+
+                case 8:
+                    System.out.println("Exiting... Thank you for using Playlist Manager!");
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    // ADD SONG
+    private static void addSong(Scanner sc) {
+        System.out.print("Enter song name: ");
+        String song = sc.nextLine();
+        playlist.add(song);
+        iterator = playlist.listIterator();
+        System.out.println("✔ '" + song + "' added to playlist.");
+    }
+
+    // REMOVE SONG
+    private static void removeSong(Scanner sc) {
+        System.out.print("Enter song name to remove: ");
+        String song = sc.nextLine();
+        if (playlist.remove(song)) {
+            System.out.println("✔ '" + song + "' removed from playlist.");
+        } else {
+            System.out.println("❌ Song not found!");
+        }
+        iterator = playlist.listIterator();
+    }
+
+    // SEARCH SONG
+    private static void searchSong(Scanner sc) {
+        System.out.print("Enter song to search: ");
+        String song = sc.nextLine();
+        if (playlist.contains(song)) {
+            System.out.println("✔ Song found in playlist!");
+        } else {
+            System.out.println("❌ Song not found!");
+        }
+    }
+
+    // PLAY NEXT SONG
+    private static void playNextSong() {
+        if (!goingForward) {
+            if (iterator.hasNext()) iterator.next();
+            goingForward = true;
+        }
+
+        if (iterator.hasNext()) {
+            System.out.println("▶ Playing: " + iterator.next());
+        } else {
+            System.out.println("⛔ End of playlist!");
+        }
+    }
+
+    // PLAY PREVIOUS SONG
+    private static void playPreviousSong() {
+        if (goingForward) {
+            if (iterator.hasPrevious()) iterator.previous();
+            goingForward = false;
+        }
+
+        if (iterator.hasPrevious()) {
+            System.out.println("◀ Playing: " + iterator.previous());
+        } else {
+            System.out.println("⛔ Start of playlist!");
+        }
+    }
+
+    // DISPLAY PLAYLIST
+    private static void displayPlaylist() {
+        if (playlist.isEmpty()) {
+            System.out.println("Playlist is empty!");
+            return;
+        }
+
+        System.out.println("\n===== 🎧 CURRENT PLAYLIST =====");
+        int index = 1;
+        for (String song : playlist) {
+            System.out.println(index++ + ". " + song);
+        }
+    }
+
+    // CLEAR PLAYLIST
+    private static void clearPlaylist() {
+        playlist.clear();
+        iterator = playlist.listIterator();
+        System.out.println("✔ Playlist cleared!");
+    }
+}
